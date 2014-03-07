@@ -1,0 +1,10 @@
+[Unit]
+Description=Service to provide/export Phone functionality
+After=sound.target
+
+[Service]
+ExecStart=/usr/sbin/phoned
+Type=simple
+
+[Install]
+WantedBy=tizen-middleware.target

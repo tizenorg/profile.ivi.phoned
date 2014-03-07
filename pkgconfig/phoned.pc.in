@@ -1,0 +1,8 @@
+prefix=/usr
+project_name=phoned
+exec_prefix=${prefix}
+
+Name: phoned
+Description: phoned
+Version:
+Requires:
