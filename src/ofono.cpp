@@ -244,7 +244,13 @@ void OFono::asyncSelectModemCallback(GObject *source, GAsyncResult *result, gpoi
         std::string pathString(path);
         size_t idx = pathString.find( "_" ) + 1; // index of address of remote device
         std::string modemRemoteBtAddress = pathString.substr (idx, pathString.length()-idx);
-        if(!modemRemoteBtAddress.compare(btAddress)) {
+
+	// remove additional underscores
+	modemRemoteBtAddress.erase(std::remove_if(modemRemoteBtAddress.begin(),modemRemoteBtAddress.end(),isnxdigit),modemRemoteBtAddress.end());
+	LoggerD("modem paths to be compared: %s, %s", modemRemoteBtAddress.c_str(),btAddress.c_str());
+
+	if(!modemRemoteBtAddress.compare(btAddress))
+	{
             ctx->addModem(path, props);
             // currently only one modem is supported - that's why the break is here
             // take the first one from the list and make it 'default'

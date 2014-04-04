@@ -21,7 +21,7 @@
         std::ostringstream platformLog; \
         platformLog << fmt; \
         char buf[1024]; \
-        strcpy(buf, platformLog.str().c_str(), ##args); \
+        sprintf(buf, platformLog.str().c_str(), ##args); \
         printf("%s(%d) > %s\n", __func__, __LINE__, buf); \
     } while(0)
 

@@ -70,6 +70,7 @@ class Bluez {
 
     private:
         gchar* getDefaultAdapter();
+        gchar* getDeviceFromAddress(std::string &address);
         static void handleSignal(GDBusConnection *connection,
                                  const gchar     *sender,
                                  const gchar     *object_path,

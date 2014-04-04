@@ -14,10 +14,9 @@ namespace PhoneD {
 
 #define OBEX_PREFIX                        "org.bluez.obex"
 
-#define OBEX_CLIENT_SERVICE                OBEX_PREFIX ".client"
-#define OBEX_CLIENT_IFACE                  OBEX_PREFIX ".Client"
-#define OBEX_PHONEBOOK_IFACE               OBEX_PREFIX ".PhonebookAccess"
-#define OBEX_TRANSFER_IFACE                OBEX_PREFIX ".Transfer"
+#define OBEX_CLIENT_IFACE                  OBEX_PREFIX ".Client1"
+#define OBEX_PHONEBOOK_IFACE               OBEX_PREFIX ".PhonebookAccess1"
+#define OBEX_TRANSFER_IFACE                OBEX_PREFIX ".Transfer1"
 
 // check for stalled active transfer (in seconds)
 #define CHECK_STALLED_TRANSFER_TIMEOUT     120
@@ -85,8 +84,8 @@ void Obex::createSession(const char *bt_address) {
     GVariant *parameters = g_variant_builder_end(builder);
 
     g_dbus_connection_call( g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL),
-                            OBEX_CLIENT_SERVICE,
-                            "/",
+                            OBEX_PREFIX,
+                            "/org/bluez/obex",
                             OBEX_CLIENT_IFACE,
                             "CreateSession",
                             parameters,
@@ -143,7 +142,7 @@ bool Obex::select(const char *location, const char *phonebook) {
 
     GError *err = NULL;
     g_dbus_connection_call_sync( g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL),
-                                 OBEX_CLIENT_SERVICE,
+                                 OBEX_PREFIX,
                                  mSession,
                                  OBEX_PHONEBOOK_IFACE,
                                  "Select",
@@ -192,8 +191,8 @@ void Obex::removeSession(bool notify) {
 
     GError *err = NULL;
     g_dbus_connection_call_sync( g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL),
-                                 OBEX_CLIENT_SERVICE,
-                                 "/",
+                                 OBEX_PREFIX,
+                                 "/org/bluez/obex",
                                  OBEX_CLIENT_IFACE,
                                  "RemoveSession",
                                  g_variant_new("(o)", mSession), // floating variants are consumed
@@ -254,7 +253,7 @@ void Obex::clearSyncQueue() {
     if(mActiveTransfer) {
         GError *err = NULL;
         g_dbus_connection_call_sync( g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL),
-                                     OBEX_CLIENT_SERVICE,
+                                     OBEX_PREFIX,
                                      mActiveTransfer,
                                      OBEX_TRANSFER_IFACE,
                                      "Cancel",
@@ -328,7 +327,7 @@ Obex::Error Obex::pullAll(const char *type, unsigned long count) {
     GVariant *parameters = g_variant_builder_end(builder);
 
     reply = g_dbus_connection_call_sync( g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL),
-                                         OBEX_CLIENT_SERVICE,
+                                         OBEX_PREFIX,
                                          mSession,
                                          OBEX_PHONEBOOK_IFACE,
                                          "PullAll",
@@ -354,7 +353,7 @@ Obex::Error Obex::pullAll(const char *type, unsigned long count) {
 
     const char *transfer = NULL;
     GVariantIter *iter;
-    g_variant_get(reply, "((oa{sv}))", &transfer, &iter);
+    g_variant_get(reply, "(oa{sv})", &transfer, &iter);
     LoggerD("transfer path = " << transfer);
     mActiveTransfer = strdup(transfer);
     g_timeout_add(CHECK_STALLED_TRANSFER_TIMEOUT*1000,
@@ -363,12 +362,6 @@ Obex::Error Obex::pullAll(const char *type, unsigned long count) {
 
     // let's abuse 'cb' field from CtxCbData to store selected remote device's MAC
     CtxCbData *data = new CtxCbData(this, strdup(mSelectedRemoteDevice.c_str()), NULL, (void*)type);
-    // we can set signal listener for "Error" from here,
-    // since we don't need to know file path of stored transfer data
-    Utils::setSignalListener(G_BUS_TYPE_SESSION, OBEX_CLIENT_SERVICE,
-                             OBEX_TRANSFER_IFACE, transfer, "Error",
-                             Obex::handleSignal, data); //TODO: think of using 'error' callback here,
-                                                        //      or if error occurs, returns empty NULL string
 
     const char *key;
     GVariant *value;
@@ -387,9 +380,9 @@ Obex::Error Obex::pullAll(const char *type, unsigned long count) {
                     // !!! what if signal comes before we subscribe for it? ... CAN IT? ... signals from DBUS
                     // should be executed in the thread the registration was made from, ie. this method has to
                     // to be completed first
-                    data->data1 = strdup(fileName);
-                    Utils::setSignalListener(G_BUS_TYPE_SESSION, OBEX_CLIENT_SERVICE,
-                                             OBEX_TRANSFER_IFACE, transfer, "Complete",
+		    data->data1 = strdup(fileName);
+                    Utils::setSignalListener(G_BUS_TYPE_SESSION, OBEX_PREFIX,
+                                             "org.freedesktop.DBus.Properties", transfer, "PropertiesChanged",
                                              Obex::handleSignal, data);
                 }
             }
@@ -812,33 +805,46 @@ void Obex::handleSignal(GDBusConnection       *connection,
         return;
     }
 
-    if(!strcmp(interface_name, OBEX_TRANSFER_IFACE)) {
-        if(!strcmp(signal_name, "Complete") || !strcmp(signal_name, "Error")) {
-            Utils::removeSignalListener(G_BUS_TYPE_SESSION, OBEX_CLIENT_SERVICE,
-                                        OBEX_TRANSFER_IFACE, object_path,
-                                        "Complete");
-            Utils::removeSignalListener(G_BUS_TYPE_SESSION, OBEX_CLIENT_SERVICE,
-                                        OBEX_TRANSFER_IFACE, object_path,
-                                        "Error");
-            if(ctx->mActiveTransfer) {
-                free(ctx->mActiveTransfer);
-                ctx->mActiveTransfer = NULL;
-            }
+    if(!strcmp(signal_name, "PropertiesChanged"))
+    {
+		char *objPath = NULL;
+		GVariantIter* iter, iter2;
 
-            if(!strcmp(signal_name, "Complete")) {
-                const char *path = static_cast<const char *>(data->data1);
-                const char *type = static_cast<const char *>(data->data2);
-                const char *origin = static_cast<const char *>(data->cb);
-                ctx->processVCards(path, type, origin);
-            }
-            else if(!strcmp(signal_name, "Error")) {
-                // dont' have to do anything
-            }
-            if(data->data1) free(data->data1); // path - to the file containing received VCards
-            if(data->cb) free(data->cb);       // origin - MAC address of selected remote device
-            delete data;
-            ctx->initiateNextSyncRequest();
-        }
+		g_variant_get(parameters, "(sa{sv}as)", &objPath, &iter, &iter2);
+
+		if(objPath)
+		{
+			GVariant* var;
+			char *prop = NULL;
+
+			while(g_variant_iter_next(iter, "{sv}", &prop, &var))
+			{
+				if(!strcmp(prop, "Status"))
+				{
+					char *status_str=0;
+					g_variant_get(var, "s", &status_str);
+					//LoggerD("Status is: " << status_str);
+
+					if(!strcmp(status_str, "complete"))
+					{
+						const char *path = static_cast<const char *>(data->data1);
+						const char *type = static_cast<const char *>(data->data2);
+						const char *origin = static_cast<const char *>(data->cb);
+						ctx->processVCards(path, type, origin);
+
+
+						if(data->data1) free(data->data1); // path - to the file containing received VCards
+						if(data->cb) free(data->cb);       // origin - MAC address of selected remote device
+					   	delete data;
+						ctx->initiateNextSyncRequest();
+					}
+				}
+			}
+		}
+		else
+		{
+			LoggerD("No objectPath found. Exiting.");
+		}
     }
 }
 
