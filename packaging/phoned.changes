@@ -1,3 +1,6 @@
+* Mon Apr 14 2014 brianjjones <brian.j.jones@intel.com> accepted/tizen/ivi/release/20140404.212421@5627815
+- Memory leak fix patch
+
 * Fri Mar 07 2014 brianjjones <brian.j.jones@intel.com> c7ee743
 - Initial checkin for phone daemon for the HTML5 UI
 

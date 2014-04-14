@@ -808,7 +808,7 @@ void Obex::handleSignal(GDBusConnection       *connection,
     if(!strcmp(signal_name, "PropertiesChanged"))
     {
 		char *objPath = NULL;
-		GVariantIter* iter, iter2;
+		GVariantIter* iter, *iter2;
 
 		g_variant_get(parameters, "(sa{sv}as)", &objPath, &iter, &iter2);
 
@@ -839,12 +839,17 @@ void Obex::handleSignal(GDBusConnection       *connection,
 						ctx->initiateNextSyncRequest();
 					}
 				}
+				g_free(prop);
+				g_variant_unref(var);
 			}
 		}
 		else
 		{
 			LoggerD("No objectPath found. Exiting.");
 		}
+		g_variant_iter_free(iter);
+		g_variant_iter_free(iter2);
+		g_free(objPath);
     }
 }
 
