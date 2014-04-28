@@ -8,32 +8,17 @@ SET(CMAKE_INSTALL_PREFIX "/usr")
 # -----------------------------------------------------------------------------
 INCLUDE(FindPkgConfig)
 
-PKG_CHECK_MODULES(dpl REQUIRED dpl-efl)
 PKG_CHECK_MODULES(glib REQUIRED glib-2.0)
 PKG_CHECK_MODULES(gio REQUIRED gio-2.0)
 PKG_CHECK_MODULES(dbus REQUIRED dbus-1)
 PKG_CHECK_MODULES(libebook-contacts REQUIRED libebook-contacts-1.2)
 
 INCLUDE_DIRECTORIES(
-  ${dpl_INCLUDE_DIRS}
   ${glib_INCLUDE_DIRS}
   ${gio_INCLUDE_DIRS}
   ${dbus_INCLUDE_DIRS}
   ${libebook-contacts_INCLUDE_DIRS}
 )
-
-# -----------------------------------------------------------------------------
-# Determine the log option
-# -----------------------------------------------------------------------------
-
-OPTION(DPL_LOG "DPL logs status" ON)
-
-IF(DPL_LOG)
-    MESSAGE(STATUS "Logging enabled for DPL")
-    ADD_DEFINITIONS("-DDPL_LOGS_ENABLED")
-ELSE(DPL_LOG)
-    MESSAGE(STATUS "Logging disabled for DPL")
-ENDIF(DPL_LOG)
 
 # -----------------------------------------------------------------------------
 # Determine the time tracing option
@@ -109,7 +94,6 @@ SET(SRCS src/phoned.cpp
 
 ADD_EXECUTABLE(${TARGET_NAME} ${SRCS})
 TARGET_LINK_LIBRARIES(${TARGET_NAME}
-                      ${dpl_LDFLAGS}
                       ${glib_LDFLAGS}
                       ${gio_LDFLAGS}
                       ${dbus_LDFLAGS}
