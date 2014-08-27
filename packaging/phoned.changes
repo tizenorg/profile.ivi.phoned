@@ -1,3 +1,6 @@
+* Wed Aug 27 2014 Jimmy Huang <jimmy.huang@intel.com> submit/tizen/20140416.223255-3-g9e04e01
+- Fixed systemd unit files
+
 * Mon Apr 14 2014 brianjjones <brian.j.jones@intel.com> accepted/tizen/ivi/release/20140404.212421@5627815
 - Memory leak fix patch
 

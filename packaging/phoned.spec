@@ -33,9 +33,12 @@ make %{?jobs:-j%jobs} VERBOSE=1
 rm -rf %{buildroot}
 %make_install
 
+%install_service multi-user.target.wants phoned.service
+
 %files
 %{_libdir}/pkgconfig/phoned.pc
-%{_prefix}/sbin/phoned
+%{_prefix}/bin/phoned
 %{_prefix}/share/dbus-1/services/org.tizen.phone.service
-%{_prefix}/lib/systemd/user/phoned.service
+%{_unitdir}/phoned.service
+%{_unitdir}/multi-user.target.wants/phoned.service
 

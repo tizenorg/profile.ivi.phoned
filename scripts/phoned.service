@@ -1,10 +1,13 @@
 [Unit]
 Description=Service to provide/export Phone functionality
-After=sound.target
+After=ofono.service
 
 [Service]
-ExecStart=/usr/sbin/phoned
+Type=dbus
+User=app
+BusName=org.tizen.phone
+ExecStart=/usr/bin/phoned
 Type=simple
 
 [Install]
-WantedBy=tizen-middleware.target
+WantedBy=multi-user.target

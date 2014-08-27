@@ -65,9 +65,9 @@ ADD_DEFINITIONS("-std=c++11")
 # Global variables
 # -----------------------------------------------------------------------------
 
-SET(DESTINATION_PREFIX sbin)
+SET(DESTINATION_PREFIX bin)
 SET(DBUS_SERVICE_PREFIX share/dbus-1/services)
-SET(SYSTEMD_SERVICE_PREFIX lib/systemd/user)
+SET(SYSTEMD_SERVICE_PREFIX lib/systemd/system)
 
 # -----------------------------------------------------------------------------
 # Macros for pkgconfig
