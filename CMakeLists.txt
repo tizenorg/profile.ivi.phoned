@@ -7,6 +7,7 @@ SET(CMAKE_INSTALL_PREFIX "/usr")
 # Required platform modules
 # -----------------------------------------------------------------------------
 INCLUDE(FindPkgConfig)
+INCLUDE(GNUInstallDirs)
 
 PKG_CHECK_MODULES(glib REQUIRED glib-2.0)
 PKG_CHECK_MODULES(gio REQUIRED gio-2.0)
@@ -76,7 +77,7 @@ SET(PKGCONFIG_DIR ${CMAKE_SOURCE_DIR}/pkgconfig)
 MACRO(configure_and_install_pkg PKG_FILE)
     CONFIGURE_FILE(${PKGCONFIG_DIR}/${PKG_FILE}.in
                ${PKGCONFIG_DIR}/${PKG_FILE} @ONLY)
-    INSTALL(FILES ${PKGCONFIG_DIR}/${PKG_FILE} DESTINATION lib/pkgconfig)
+    INSTALL(FILES ${PKGCONFIG_DIR}/${PKG_FILE} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 ENDMACRO(configure_and_install_pkg)
 
 SET(TARGET_NAME phoned)
