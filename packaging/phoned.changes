@@ -1,3 +1,6 @@
+* Wed Sep 03 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140901.103829-1-ga645ab6
+- Fixes TC-1563 - Blackscreen when launching Modello Phone
+
 * Wed Aug 27 2014 Jimmy Huang <jimmy.huang@intel.com> submit/tizen/20140416.223255-3-g9e04e01
 - Fixed systemd unit files
 

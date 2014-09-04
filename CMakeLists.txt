@@ -67,7 +67,7 @@ ADD_DEFINITIONS("-std=c++11")
 
 SET(DESTINATION_PREFIX bin)
 SET(DBUS_SERVICE_PREFIX share/dbus-1/services)
-SET(SYSTEMD_SERVICE_PREFIX lib/systemd/system)
+SET(SYSTEMD_SERVICE_PREFIX lib/systemd/user)
 
 # -----------------------------------------------------------------------------
 # Macros for pkgconfig

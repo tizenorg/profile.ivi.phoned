@@ -4,10 +4,8 @@ After=ofono.service
 
 [Service]
 Type=dbus
-User=app
 BusName=org.tizen.phone
 ExecStart=/usr/bin/phoned
-Type=simple
 
 [Install]
 WantedBy=multi-user.target
