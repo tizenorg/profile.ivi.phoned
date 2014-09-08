@@ -444,6 +444,8 @@ void OFono::handleSignal(GDBusConnection       *connection,
                 std::string modemString(modem);
                 size_t idx = modemString.find( "_" ) + 1; // index of address of remote device
                 std::string modemRemoteBtAddress = modemString.substr (idx, modemString.length()-idx);
+                modemRemoteBtAddress.erase(std::remove_if(modemRemoteBtAddress.begin(),
+                    modemRemoteBtAddress.end(), isnxdigit), modemRemoteBtAddress.end());
                 if(makeMACFromRawMAC(modemRemoteBtAddress)) {
                     ctx->modemAdded(modemRemoteBtAddress);
                 }
