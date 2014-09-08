@@ -1,3 +1,6 @@
+* Mon Sep 08 2014 Jimmy Huang <jimmy.huang@intel.com> submit/tizen_ivi/20140908.173512-1-g3635592
+- Fixes invalid check for power state
+
 * Wed Sep 03 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140901.103829-1-ga645ab6
 - Fixes TC-1563 - Blackscreen when launching Modello Phone
 

@@ -72,7 +72,7 @@ gboolean OFono::checkForModemPowered(gpointer user_data) {
 }
 
 bool OFono::isModemPowered(const char *modem) {
-    if(modem)
+    if(!modem)
         return false;
 
     GError *err = NULL;
