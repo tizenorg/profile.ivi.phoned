@@ -25,7 +25,7 @@ A service to export OFono/Obex functionality over DBUS, to be used by WebRuntime
 
 export LDFLAGS+="-Wl,--rpath=%{PREFIX} -Wl,--as-needed"
 
-cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix} -DENABLE_TIME_TRACER="OFF"
+%cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix} -DENABLE_TIME_TRACER="OFF"
 
 make %{?jobs:-j%jobs} VERBOSE=1
 
