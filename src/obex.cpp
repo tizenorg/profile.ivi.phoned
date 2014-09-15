@@ -554,11 +554,16 @@ void Obex::parseEContactToJsonTizenContact(EContact *econtact, std::string &cont
        contact += "}";
 
        // addresses:
+       bool firstAddress = true;
        contact += ",\"addresses\":[";
        for(int id=E_CONTACT_ADDRESS_HOME; id<=E_CONTACT_ADDRESS_OTHER; id++) {
            EContactAddress *address = (EContactAddress*)e_contact_get(econtact, (EContactField)id);
            if(address) {
-               contact += "{";
+               if (firstAddress)
+                   contact += "{";
+               else
+                   contact += ",{";
+               firstAddress = false;
                contact += "\"isDefault\":\"false\"";
                if(address->country && strcmp(address->country,"")) {
                    contact += ",\"country\":\"";

@@ -1,3 +1,10 @@
+* Mon Sep 15 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140908.201319-5-g84a14e0
+- Fix FTBFS for x86_64
+- Fixed a bug where it doesn't handle multiple addresses
+
+* Mon Sep 15 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140908.201319-5-g84a14e0
+- Fixed a bug where it doesn't handle multiple addresses
+
 * Mon Sep 08 2014 Jimmy Huang <jimmy.huang@intel.com> submit/tizen_ivi/20140908.173512-2-ge0fa798
 - Remove underscores in MAC address
 
