@@ -139,7 +139,8 @@ class OFono {
                                  const gchar     *signal_name, GVariant        *parameters,
                                  gpointer         user_data);
 
-        //DBUS: array{object,dict} GetCalls()
+        //DBUS: array{object,dict}
+        void getModems(); //Get an array of call object paths and properties of available modems
         void getCalls(); //Get an array of call object paths and properties that represents the currently present calls.
         void addCall(const char *path, GVariantIter *props);
         void removeCall(OFono::Call **call);
