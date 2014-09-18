@@ -61,10 +61,16 @@ OFono::~OFono() {
 
 gboolean OFono::checkForModemPowered(gpointer user_data) {
     OFono *ctx = static_cast<OFono*>(user_data);
-    if(!ctx || !ctx->mModemPath)
+    if(!ctx)
         return G_SOURCE_CONTINUE; // continuous timeout
 
+    if(!ctx->mModemPath) {
+        LoggerD("No modem available, get all available modems");
+        ctx->getModems();
+    }
+
     if(!ctx->isModemPowered(ctx->mModemPath)) {
+        LoggerD("modem is not powered");
         ctx->setModemPowered(ctx->mModemPath, true);
     }
 
@@ -370,6 +376,64 @@ void OFono::removeModem(const char *modemPath) {
             mModemPath = NULL;
         }
     }
+}
+
+void OFono::getModems()
+{
+    LoggerD("entered");
+
+    GError *err = NULL;
+    GVariant *reply = NULL;
+    reply = g_dbus_connection_call_sync( g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, NULL),
+                                         OFONO_SERVICE,
+                                         "/",
+                                         OFONO_MANAGER_IFACE,
+                                         "GetModems",
+                                         NULL,
+                                         NULL,
+                                         G_DBUS_CALL_FLAGS_NONE,
+                                         -1,
+                                         NULL,
+                                         &err);
+
+    if(err || !reply) {
+        if(err) {
+            LoggerE("error calling GetModems method");
+            g_error_free(err);
+        }
+        else if(!reply)
+            LoggerE("reply is NULL");
+
+        return;
+    }
+
+    GVariantIter *modems;
+    GVariantIter *props;
+    const char *path;
+    g_variant_get(reply, "(a(oa{sv}))", &modems);
+    while(g_variant_iter_next(modems, "(oa{sv})", &path, &props)) {
+        // check if the modem is from selected remote device
+        std::string pathString(path);
+        size_t idx = pathString.find( "_" ) + 1; // index of address of remote device
+        std::string modemRemoteBtAddress = pathString.substr (idx, pathString.length()-idx);
+
+        // remove additional underscores
+        modemRemoteBtAddress.erase(std::remove_if(modemRemoteBtAddress.begin(),modemRemoteBtAddress.end(),isnxdigit),modemRemoteBtAddress.end());
+
+        // check if it is a valid bluetooth MAC address
+        if(makeMACFromRawMAC(modemRemoteBtAddress))
+        {
+            LoggerD("Modem found: " << modemRemoteBtAddress);
+            modemAdded(modemRemoteBtAddress);
+        }
+
+        g_variant_iter_free(props);
+    }
+
+    g_variant_iter_free(modems);
+    g_variant_unref(reply);
+
+    return;
 }
 
 void OFono::getCalls()
