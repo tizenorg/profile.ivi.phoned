@@ -1,3 +1,6 @@
+* Thu Sep 18 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140915.195444-1-g32e0ce7
+- Query available modems and connect to first modem found
+
 * Mon Sep 15 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140908.201319-5-g84a14e0
 - Fix FTBFS for x86_64
 - Fixed a bug where it doesn't handle multiple addresses

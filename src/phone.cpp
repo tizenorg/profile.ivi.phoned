@@ -287,7 +287,12 @@ void Phone::deviceRemoved(const char *device) {
 
 void Phone::modemAdded(std::string &modem) {
     LoggerD("modem added: " << modem);
-    if(!mWantedRemoteDevice.compare(modem)) {
+	if (mWantedRemoteDevice.empty()) {
+        LoggerD("No modem selected yet, default to: " << modem);
+        mWantedRemoteDevice = modem;
+        storeSelectedRemoteDeviceMAC(modem);
+        startServices();
+    } else if(!mWantedRemoteDevice.compare(modem)) {
         selectModem(mWantedRemoteDevice);
     }
 }
