@@ -1,3 +1,6 @@
+* Wed Sep 24 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140915.195444-2-g72610ba
+- Launch lemolo dialer to handle incoming calls
+
 * Thu Sep 18 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140915.195444-1-g32e0ce7
 - Query available modems and connect to first modem found
 

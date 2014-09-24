@@ -12,6 +12,7 @@ BuildRequires:  pkgconfig(libebook-contacts-1.2)
 BuildRequires:  pkgconfig(expat)
 BuildRequires:  pkgconfig(json-glib-1.0)
 BuildRequires:  pkgconfig(dbus-1)
+BuildRequires:  pkgconfig(aul)
 
 %description
 A service to export OFono/Obex functionality over DBUS, to be used by WebRuntime plugin

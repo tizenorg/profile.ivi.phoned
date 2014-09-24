@@ -1,6 +1,7 @@
 #include <string.h>
 #include <fstream>
 #include <algorithm>
+#include <aul.h>
 
 #include "phone.h"
 #include "utils.h"
@@ -10,6 +11,8 @@
 namespace PhoneD {
 
 #define TIZEN_PREFIX           "org.tizen"
+#define DIALER_APP_ID          "org.tizen.dialer"
+#define MODELLO_APP_ID         "Modello005.Homescreen"
 
 #define PHONE_SERVICE          TIZEN_PREFIX ".phone"
 #define PHONE_IFACE            TIZEN_PREFIX ".Phone"
@@ -693,6 +696,13 @@ void Phone::callChanged(const char* state, const char* phoneNumber) {
         // a call has been made => update call history
         // use a delayed sync, since the list may not be updated on the phone yet
         g_timeout_add(DELAYED_SYNC_CALLHISTORY_INTERVAL, delayedSyncCallHistory, this);
+    } else if (state && !strcmp(state, "incoming")) {
+        // Launch dialer if Modello is not running since Modello includes a phone app
+        if (!aul_app_is_running(MODELLO_APP_ID)) {
+            LoggerD("Modello is not running");
+            if (aul_open_app(DIALER_APP_ID) < 0)
+                LoggerD("Failed to launch dialer");
+        }
     }
 
     GVariant *props[8];

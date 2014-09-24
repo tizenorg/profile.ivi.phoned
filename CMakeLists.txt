@@ -13,12 +13,14 @@ PKG_CHECK_MODULES(glib REQUIRED glib-2.0)
 PKG_CHECK_MODULES(gio REQUIRED gio-2.0)
 PKG_CHECK_MODULES(dbus REQUIRED dbus-1)
 PKG_CHECK_MODULES(libebook-contacts REQUIRED libebook-contacts-1.2)
+PKG_CHECK_MODULES(aul REQUIRED aul)
 
 INCLUDE_DIRECTORIES(
   ${glib_INCLUDE_DIRS}
   ${gio_INCLUDE_DIRS}
   ${dbus_INCLUDE_DIRS}
   ${libebook-contacts_INCLUDE_DIRS}
+  ${aul_INCLUDE_DIRS}
 )
 
 # -----------------------------------------------------------------------------
@@ -99,6 +101,7 @@ TARGET_LINK_LIBRARIES(${TARGET_NAME}
                       ${gio_LDFLAGS}
                       ${dbus_LDFLAGS}
                       ${libebook-contacts_LDFLAGS}
+                      ${aul_LDFLAGS}
 )
 INSTALL(TARGETS ${TARGET_NAME} DESTINATION ${DESTINATION_PREFIX})
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/scripts/org.tizen.phone.service DESTINATION ${DBUS_SERVICE_PREFIX})
