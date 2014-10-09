@@ -5,6 +5,7 @@ Release:    1
 Group:      Automotive/Modello
 License:    Apache-2.0
 Source0:    %{name}-%{version}.tar.gz
+Source1001: %{name}.manifest
 
 BuildRequires:  cmake
 BuildRequires:  gettext-devel
@@ -19,6 +20,7 @@ A service to export OFono/Obex functionality over DBUS, to be used by WebRuntime
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 %build
 
@@ -37,6 +39,7 @@ rm -rf %{buildroot}
 %install_service ../user/weston.target.wants phoned.service
 
 %files
+%manifest %{name}.manifest
 %{_libdir}/pkgconfig/phoned.pc
 %{_prefix}/bin/phoned
 %{_prefix}/share/dbus-1/services/org.tizen.phone.service
