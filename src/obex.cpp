@@ -996,6 +996,11 @@ void Obex::processVCards(const char *filePath, const char *type, const char *ori
             }
             else if(line.find("X-IRMC-CALL-DATETIME") == 0) {
                 size_t index1 = line.find( "TYPE=" ) + 5;
+                if (index1 == 4) {
+                    // vcard format doesn't contain "TYPE=" prefix
+                    // use ";" as the index instead
+                    index1 = line.find( ";" ) + 1;
+                }
                 size_t index2 = line.find( ":", index1 ) + 1;
 
                 std::string note = line.substr (index1, index2-index1-1);
