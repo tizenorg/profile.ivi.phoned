@@ -1,3 +1,6 @@
+* Thu Oct 23 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140926.101841-1-ga969171
+- Fix TC-1905 - Call type not shown in call history
+
 * Wed Sep 24 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20140915.195444-2-g72610ba
 - Launch lemolo dialer to handle incoming calls
 
