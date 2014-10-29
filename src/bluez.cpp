@@ -211,14 +211,13 @@ void Bluez::handleSignal(GDBusConnection  *connection,
             char *objPath = NULL;
 			GVariantIter* iter;
 
-			g_variant_get(parameters, "(oa{sa{sv}})", &objPath, &iter);
+			g_variant_get(parameters, "(oas)", &objPath, &iter);
 
 			if(objPath)
 			{
-				GVariantIter* iter2;
 				char *interface = NULL;
 
-				while(g_variant_iter_next(iter, "{sa{sv}}",&interface, &iter2))
+				while(g_variant_iter_next(iter, "s", &interface));
 				{
 
 					if(!strcmp(interface, "org.bluez.Adapter1"))
