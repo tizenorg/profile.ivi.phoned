@@ -1,3 +1,6 @@
+* Wed Oct 29 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20141024.005038-5-g1cd9a0c
+- Fixed bug where ModemRemoved signal never handled
+
 * Wed Oct 29 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20141024.005038-4-gc79fa80
 - Fixed dbus method signature for signals
 

@@ -515,9 +515,7 @@ void OFono::handleSignal(GDBusConnection       *connection,
                 }
             }
         }
-    }
-    else if(!strcmp(interface_name, OFONO_MANAGER_IFACE)) {
-        if(!strcmp(signal_name, "ModemRemoved")) {
+        else if(!strcmp(signal_name, "ModemRemoved")) {
             const char *modem = NULL;
             g_variant_get(parameters, "(o)", &modem);
             if(modem) {
