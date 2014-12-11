@@ -167,27 +167,32 @@ void Obex::removeSession(bool notify) {
 
     LoggerD("Removing session:" << mSession);
 
-    // delete/unref individual contacts
-    for(auto it=mContacts.begin(); it!=mContacts.end(); ++it) {
-        EContact *contact = (*it).second;
-        if(contact) {
-            // TODO: delete also all its attribs?
-            g_object_unref(contact);
+    // Changing the behavior of removeSession so that when notify is set to false,
+    // we will only close the obex session without destroying cached data, this
+    // unblocks other clients when accessing obex.
+    if (notify) {
+        // delete/unref individual contacts
+        for(auto it=mContacts.begin(); it!=mContacts.end(); ++it) {
+            EContact *contact = (*it).second;
+            if(contact) {
+                // TODO: delete also all its attribs?
+                g_object_unref(contact);
+            }
         }
-    }
-    mContacts.clear();
-    mContactsOrder.clear();
+        mContacts.clear();
+        mContactsOrder.clear();
 
-    // delete/unref individual cll history entries
-    for(auto it=mCallHistory.begin(); it!=mCallHistory.end(); ++it) {
-        EContact *item = (*it).second;
-        if(item) {
-            // TODO: delete also all its attribs?
-            g_object_unref(item);
+        // delete/unref individual call history entries
+        for(auto it=mCallHistory.begin(); it!=mCallHistory.end(); ++it) {
+            EContact *item = (*it).second;
+            if(item) {
+                // TODO: delete also all its attribs?
+                g_object_unref(item);
+            }
         }
+        mCallHistory.clear();
+        mCallHistoryOrder.clear();
     }
-    mCallHistory.clear();
-    mCallHistoryOrder.clear();
 
     GError *err = NULL;
     g_dbus_connection_call_sync( g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL),
@@ -828,7 +833,7 @@ void Obex::handleSignal(GDBusConnection       *connection,
 				{
 					char *status_str=0;
 					g_variant_get(var, "s", &status_str);
-					//LoggerD("Status is: " << status_str);
+					LoggerD("Status is: " << status_str);
 
 					if(!strcmp(status_str, "complete"))
 					{

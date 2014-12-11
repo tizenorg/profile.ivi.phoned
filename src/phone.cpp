@@ -474,6 +474,9 @@ void Phone::callHistoryChanged() {
 void Phone::pbSynchronizationDone() {
     LoggerD("PB synchronization DONE");
     mPBSynchronized = true;
+    // remove session after sync is done to prevent blocking other clients
+    // each sync will now require calling createSession() instead
+    removeSession(false);
 }
 
 void Phone::handleMethodCall( GDBusConnection       *connection,
@@ -527,8 +530,7 @@ void Phone::handleMethodCall( GDBusConnection       *connection,
                 }
                 else {
                     // the synchronization may be already on-going, but request it anyway
-                    /*Obex::Error err = */phone->syncContacts();
-                    /*Obex::Error err = */phone->syncCallHistory();
+                    phone->createSession(phone->mWantedRemoteDevice.c_str());
                 }
             }
             else {
@@ -653,8 +655,7 @@ void Phone::handleMethodCall( GDBusConnection       *connection,
     }
     else if(!strcmp(method_name, "Synchronize")) {
         LoggerD("Synchronizing data with the phone");
-        /*Obex::Error err = */phone->syncContacts();
-        /*Obex::Error err = */phone->syncCallHistory();
+        phone->createSession(phone->mWantedRemoteDevice.c_str());
         g_dbus_method_invocation_return_value(invocation, NULL);
     }
     else if(!strcmp(method_name, "GetContacts")) {

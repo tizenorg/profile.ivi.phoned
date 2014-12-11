@@ -1,3 +1,6 @@
+* Thu Dec 11 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20141024.005038-6-g4096c04
+- Fix TC-2051 - Prevents further PBAP transfers
+
 * Wed Oct 29 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20141024.005038-5-g1cd9a0c
 - Fixed bug where ModemRemoved signal never handled
 
