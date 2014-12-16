@@ -100,6 +100,11 @@ Phone::Phone() :
 
     // Request to get own name is sent, now
     // busAcquiredCb should be called and thus setup() initiated
+
+    /*
+     * No longer need to power up bluetooth
+     * so that bluetooth status is persisted
+     *
     if(setBluetoothPowered(true)) {
         LoggerD("Bluetooth powered");
         if(setAdapterPowered(true)) {
@@ -112,6 +117,7 @@ Phone::Phone() :
     else {
         LoggerE("Failed to Power-ON Bluetooth");
     }
+    */
 }
 
 Phone::~Phone() {

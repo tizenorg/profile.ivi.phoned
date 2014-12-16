@@ -1,3 +1,6 @@
+* Tue Dec 16 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20141212.011413-1-gcd68e2f
+- Fix TC-2024 - bluetooth off status not persisted after system reboot
+
 * Thu Dec 11 2014 Jimmy Huang <jimmy.huang@intel.com> accepted/tizen/ivi/20141024.005038-6-g4096c04
 - Fix TC-2051 - Prevents further PBAP transfers
 
