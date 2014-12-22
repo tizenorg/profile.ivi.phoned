@@ -38,7 +38,7 @@ export LDFLAGS="${LDFLAGS} -Wl,--rpath=%{PREFIX} -Wl,--as-needed"
 rm -rf %{buildroot}
 %make_install
 
-%install_service ../user/weston.target.wants phoned.service
+%install_service ../user/default.target.wants phoned.service
 
 %files
 %manifest %{name}.manifest
@@ -46,4 +46,4 @@ rm -rf %{buildroot}
 %{_prefix}/bin/phoned
 %{_prefix}/share/dbus-1/services/org.tizen.phone.service
 %{_unitdir_user}/phoned.service
-%{_unitdir_user}/weston.target.wants/phoned.service
+%{_unitdir_user}/default.target.wants/phoned.service
